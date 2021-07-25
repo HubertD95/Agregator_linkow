@@ -1,0 +1,36 @@
+﻿@model AgregatorMVC.Models.LinkModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edycja</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>            
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Link" class="control-label"></label>
+                <input asp-for="Link" class="form-control" />
+                <span asp-validation-for="Link" class="text-danger"></span>
+            </div>            
+            <div class="form-group">
+                <input type="submit" value="Zapisz" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="text-danger">@Html.Raw(TempData["msg"])</div>
+
+<div>
+    <a asp-action="Index">Wróć do mojego konta</a>
+</div>
+

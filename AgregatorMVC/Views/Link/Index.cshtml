@@ -1,0 +1,86 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using AgregatorMVC.Data;
+
+@model PaginatedList<AgregatorMVC.Models.LinkModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Lista linków</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Link
+            </th>
+            <th>
+                Punkty
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(x => (DateTime.Now - x.DateTime).Days < 5))
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title) <br />
+                <a asp-action="RedirectToURL" asp-route-linkk="@item.Link">@Html.DisplayFor(modelItem => item.Link)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Points)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+            @if (@Context.Session.GetInt32("UserID") == null)
+            {
+                <td></td>
+            }
+            else if (item.UserID != @Context.Session.GetInt32("UserID") && item.UpVote != true && item.DownVote != true)
+            {
+                <td>
+                    @Html.ActionLink("Lubię to", "UpVote", new { id = item.ID }) |
+                    @Html.ActionLink("Nie lubię", "DownVote", new { id = item.ID })
+                </td>
+            }
+            else if (item.UserID != @Context.Session.GetInt32("UserID") && item.UpVote == true && item.DownVote != true)
+            {
+                <td>
+                    @Html.ActionLink("Nie lubię", "DownVote", new { id = item.ID })
+                </td>
+            }
+            else if (item.UserID != @Context.Session.GetInt32("UserID") && item.DownVote == true && item.UpVote != true)
+            {
+                <td>
+                    @Html.ActionLink("Lubię to", "UpVote", new { id = item.ID }) 
+                </td>
+            }           
+        </tr>
+
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   class="btn btn-default @prevDisabled"> Wstecz
+</a>
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   class="btn btn-default @nextDisabled"> Dalej
+</a>

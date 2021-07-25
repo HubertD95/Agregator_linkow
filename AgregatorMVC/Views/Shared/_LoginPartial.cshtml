@@ -1,0 +1,20 @@
+﻿@using Microsoft.AspNetCore.Http;
+
+<ul class="navbar-nav">
+    @if (@Context.Session.GetInt32("UserID") != null)
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Wyloguj</a>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Zaloguj się</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Register">Stwórz konto</a>
+        </li>
+    }
+    @*}*@
+</ul>

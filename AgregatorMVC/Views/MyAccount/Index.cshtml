@@ -1,0 +1,101 @@
+﻿@model AgregatorMVC.Models.MyAccountModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h4>Dodaj link</h4>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Link.Title" class="control-label"></label>
+                <input asp-for="Link.Title" class="form-control" />
+                <span class="text-danger">@Html.Raw(TempData["TitleError"])</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Link.Link" class="control-label"></label>
+                <input asp-for="Link.Link" class="form-control" />
+                <span asp-validation-for="Link.Link" class="text-danger"></span>
+                <span class="text-danger">@Html.Raw(TempData["LinkError"])</span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Dodaj link" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<br />
+<br />
+
+<h4>Lista linków</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Link
+            </th>
+            <th>
+                Punkty
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Links.Where(x => (DateTime.Now - x.DateTime).Days < 5))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title) <br />
+                    <a asp-action="RedirectToURL" asp-route-linkk="@item.Link">@Html.DisplayFor(modelItem => item.Link)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Points)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime)
+                </td>
+                <td>
+                    @Html.ActionLink("Edytuj", "Edit", new { id = item.ID }) |
+                    @Html.ActionLink("Usuń", "Delete", new { id = item.ID })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.Links.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Links.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.Links.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+    Wstecz
+</a>
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.Links.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+    Dalej
+</a>
+
+<br /><br />
+
+<div>
+    <a asp-action="Index">Wróć do strony głównej</a>
+</div>
+
+<div class="text-danger">@Html.Raw(TempData["msg"])</div>
